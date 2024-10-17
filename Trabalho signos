@@ -1,0 +1,154 @@
+    //---------------------declarações-variavel---------------------//
+   
+        Scanner ler = new Scanner(System.in);
+        Calendar hoje = Calendar.getInstance();
+        int diaAtual = hoje.get(Calendar.DATE);
+        int mesAtual = hoje.get(Calendar.MONTH) + 1;
+        int anoAtual = hoje.get(Calendar.YEAR);
+
+        String nome;
+        int sexo, diaNascimento, mesNascimento, anoNascimento;
+        int idade, numeroSorte;
+        String signo = "", cor = "";
+
+        //----------------------entrada-de-dados------------------------//  
+        System.out.println(" ° Bem-vindo ao Sistema de Consultoria de Zodíaco!");
+
+        
+        do {
+            System.out.print(" ° Digite seu nome (mínimo de 8 caracteres): ");
+            nome = ler.nextLine();
+        } while (nome.length() < 8);
+
+        
+        System.out.print(" ° Digite seu sexo (1 para Feminino, 2 para Masculino): ");
+        sexo = ler.nextInt();
+        if (sexo != 1 && sexo != 2) {
+            sexo = 2; 
+        }
+
+        
+        System.out.print(" ° Digite o dia do seu nascimento: ");
+        diaNascimento = ler.nextInt();
+
+        System.out.print(" ° Digite o mês do seu nascimento (1 a 12): ");
+        mesNascimento = ler.nextInt();
+
+        System.out.print(" ° Digite o ano do seu nascimento (a partir de 1900): ");
+        anoNascimento = ler.nextInt();
+
+        //----------------------validação-de-dados------------------------//
+        
+        if (anoNascimento < 1900 || anoNascimento > anoAtual) {
+            System.out.println(" ° Ano de nascimento inválido.");
+            return;
+        }
+
+        boolean dataValida = validarData(diaNascimento, mesNascimento, anoNascimento);
+        if (!dataValida) {
+            System.out.println(" ° Data de nascimento inválida.");
+            return;
+        }
+
+        
+        idade = calcularIdade(diaNascimento, mesNascimento, anoNascimento, diaAtual, mesAtual, anoAtual);
+
+        //----------------------identificação-do-signo------------------------//
+        signo = obterSigno(diaNascimento, mesNascimento);
+
+        //----------------------gerar-número-e-cor-da-sorte------------------------//
+        numeroSorte = 1 + (int) (Math.random() * 99);
+
+        int numCor = 1 + (int) (Math.random() * 5);
+        switch (numCor) {
+            case 1:
+                cor = "vermelho";
+                break;
+            case 2:
+                cor = "verde";
+                break;
+            case 3:
+                cor = "preto";
+                break;
+            case 4:
+                cor = "branco";
+                break;
+            default:
+                cor = "azul";
+        }
+
+        //----------------------saida-de-dados------------------------//
+        String saudacao = (sexo == 1) ? "Sra." : "Sr.";
+        String nascido = (sexo == 1) ? "nascida" : "nascido";
+
+        System.out.printf(" ° "+saudacao+" "+nome+" "+nascido+" em "+diaNascimento+"/"+mesNascimento+"/"+anoNascimento+", é do signo de "+signo+", você tem "+idade+" anos ");
+        System.out.println("");
+        System.out.printf(" ° Seu número da sorte é "+numeroSorte+"  e sua cor da sorte é "+cor );
+        
+    }
+
+    
+    public static boolean validarData(int dia, int mes, int ano) {
+        if (mes < 1 || mes > 12) {
+            return false;
+        }
+
+        if (dia < 1 || dia > 31) {
+            return false;
+        }
+
+        
+        if ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && dia > 30) {
+            return false;
+        }
+
+        
+        if (mes == 2 && dia > 28) {
+            return false;
+        }
+
+        return true;
+    }
+
+    
+    public static String obterSigno(int dia, int mes) {
+        String signo = "";
+
+        if ((mes == 3 && dia >= 21) || (mes == 4 && dia <= 20)) {
+            signo = "Áries";
+        } else if ((mes == 4 && dia >= 21) || (mes == 5 && dia <= 20)) {
+            signo = "Touro";
+        } else if ((mes == 5 && dia >= 21) || (mes == 6 && dia <= 20)) {
+            signo = "Gêmeos";
+        } else if ((mes == 6 && dia >= 21) || (mes == 7 && dia <= 21)) {
+            signo = "Câncer";
+        } else if ((mes == 7 && dia >= 22) || (mes == 8 && dia <= 22)) {
+            signo = "Leão";
+        } else if ((mes == 8 && dia >= 23) || (mes == 9 && dia <= 22)) {
+            signo = "Virgem";
+        } else if ((mes == 9 && dia >= 23) || (mes == 10 && dia <= 22)) {
+            signo = "Libra";
+        } else if ((mes == 10 && dia >= 23) || (mes == 11 && dia <= 21)) {
+            signo = "Escorpião";
+        } else if ((mes == 11 && dia >= 22) || (mes == 12 && dia <= 21)) {
+            signo = "Sagitário";
+        } else if ((mes == 12 && dia >= 22) || (mes == 1 && dia <= 20)) {
+            signo = "Capricórnio";
+        } else if ((mes == 1 && dia >= 21) || (mes == 2 && dia <= 19)) {
+            signo = "Aquário";
+        } else if ((mes == 2 && dia >= 20) || (mes == 3 && dia <= 20)) {
+            signo = "Peixes";
+        }
+
+        return signo;
+    }
+
+    
+    public static int calcularIdade(int diaNascimento, int mesNascimento, int anoNascimento, int diaAtual, int mesAtual, int anoAtual) {
+        int idade = anoAtual - anoNascimento;
+        if (mesNascimento > mesAtual || (mesNascimento == mesAtual && diaNascimento > diaAtual)) {
+            idade--;
+        }
+        return idade;
+    }
+}
